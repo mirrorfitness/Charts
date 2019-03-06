@@ -143,6 +143,10 @@ open class LineChartRenderer: LineRadarRenderer
             
             if cur == nil { return }
             
+            if _xBounds.min == 0, let leading = dataSet.cubicLeadingValue {
+                prev = leading
+            }
+
             // let the spline start
             cubicPath.move(to: CGPoint(x: CGFloat(cur.x), y: CGFloat(cur.y * phaseY)), transform: valueToPixelMatrix)
             
@@ -155,6 +159,10 @@ open class LineChartRenderer: LineRadarRenderer
                 nextIndex = j + 1 < dataSet.entryCount ? j + 1 : j
                 next = dataSet.entryForIndex(nextIndex)
                 
+                if j + 1 == dataSet.entryCount, let trailing = dataSet.cubicTrailingValue {
+                    next = trailing
+                }
+
                 if next == nil { break }
                 
                 prevDx = CGFloat(cur.x - prevPrev.x) * intensity
